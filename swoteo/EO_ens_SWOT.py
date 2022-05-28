@@ -26,7 +26,12 @@ class EO_Ensemble():
         'Linear Weighted Average': Take the average of each ensemble prediction based on linear calibration data error
         'Quadratic Weighted Error': Take average of each ensemble prediction based on quadratic calibration data error
         'Best Member': take the best member"""
-        self.scenario = scenario
+        scenario_map = {
+            'optimumDecay': 'Optimum Decay',
+            'minDecay': 'Minimum Decay',
+            'maxDecay': 'Maximum Decay'
+        }
+        self.scenario = scenario_map[scenario]
         self.ensemble_size = 100
         self.inputpath = inputpath
         self.savepath = savepath

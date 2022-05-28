@@ -1,4 +1,3 @@
-import os
 import sys
 
 from swoteo.EO_ens_SWOT import EO_Ensemble
@@ -6,7 +5,7 @@ from swoteo.EO_ens_SWOT import EO_Ensemble
 savepath = sys.argv[1]
 inputpath = sys.argv[2]
 inputtime = sys.argv[3]
-scenario = sys.argv[4]  # Has to be 'Optimum Decay', 'Maximum Decay', or 'Minimum Decay'
+scenario = sys.argv[4]  # Has to be 'optimumDecay', or 'minDecay', or 'maxDecay'
 
 # savepath = "res"
 # inputpath = "tests/test1.csv"
