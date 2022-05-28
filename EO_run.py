@@ -1,11 +1,17 @@
-import EO_ens_SWOT
 import os
+import sys
+
 from EO_ens_SWOT import EO_Ensemble
 
-data_path = sys_arg1
-file = sys_arg2
-inputtime = sys_arg3
-scenario=sys_arg4  #Has to be 'Optimum Decay', 'Maximum Decay', or 'Minimum Decay'
+savepath = sys.argv[1]
+inputpath = sys.argv[2]
+inputtime = sys.argv[3]
+scenario = sys.argv[4]  # Has to be 'Optimum Decay', 'Maximum Decay', or 'Minimum Decay'
 
-eo_ens = EO_Ensemble(inputtime,data_path,
-                     file, scenario)
+# savepath = "res"
+# inputpath = "tests/test1.csv"
+# inputtime = 3
+# scenario = "Optimum Decay"
+
+eo_ens = EO_Ensemble(inputtime, savepath, inputpath, scenario)
+eo_ens.run_EO()

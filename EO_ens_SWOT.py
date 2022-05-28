@@ -19,7 +19,7 @@ plt.rcParams["figure.autolayout"] = True
 #np.random.seed(19231520)
 
 class EO_Ensemble():
-    def __init__(self, inputtime, fpath, fname, scenario):
+    def __init__(self, inputtime, savepath, inputpath, scenario):
         """Methods:
         'Average': Take the straight average for each prediction
         'Linear Weighted Average': Take the average of each ensemble prediction based on linear calibration data error
@@ -27,11 +27,8 @@ class EO_Ensemble():
         'Best Member': take the best member"""
         self.scenario = scenario
         self.ensemble_size = 100
-        self.path = fpath
-        self.fname = fname
-
-        #CHANGE FOR DEPLOYMENT TO SANDBOX!!
-        self.savepath = self.path + "\\results\\" + self.fname
+        self.inputpath = inputpath
+        self.savepath = savepath
 
 
         self.version = '1.8.1'
@@ -164,7 +161,7 @@ class EO_Ensemble():
     def import_data(self):
         if not os.path.exists(self.savepath):
             os.makedirs(self.savepath)
-        df = pd.read_csv(self.path + "\\" + self.fname)
+        df = pd.read_csv(self.inputpath)
 
         df.dropna(inplace=True,subset=['ts_datetime','ts_frc','hh_datetime','hh_frc'])
         df.reset_index(drop=True, inplace=True)
