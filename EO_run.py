@@ -1,7 +1,7 @@
 import os
 import sys
 
-from EO_ens_SWOT import EO_Ensemble
+from swoteo.EO_ens_SWOT import EO_Ensemble
 
 savepath = sys.argv[1]
 inputpath = sys.argv[2]
