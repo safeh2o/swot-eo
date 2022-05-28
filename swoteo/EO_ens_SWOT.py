@@ -1460,4 +1460,10 @@ class EO_Ensemble:
         self.target = np.round(self.get_targets(), decimals=1)
         conf_assess = self.confidence_assess()
         self.generate_html_report(conf_assess)
-        return best_model_params
+
+        results = {
+            'best_model_params': best_model_params,
+            'frc': self.target
+        }
+
+        return results
