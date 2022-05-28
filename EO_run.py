@@ -10,7 +10,7 @@ scenario = sys.argv[4]  # Has to be 'optimumDecay', or 'minDecay', or 'maxDecay'
 # savepath = "res"
 # inputpath = "tests/test1.csv"
 # inputtime = 3
-# scenario = "Optimum Decay"
+# scenario = "optimumDecay"
 
 eo_ens = EO_Ensemble(inputtime, savepath, inputpath, scenario)
 eo_ens.run_EO()
