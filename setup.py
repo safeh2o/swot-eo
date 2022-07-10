@@ -11,7 +11,7 @@ reqs = [
     "scipy==1.8.0",
     "xlrd==1.2.0",
     "yattag==1.14",
-    "pillow==8.2.0",
+    "pillow==9.2.0",
     "pytest==7.1.2",
 ]
 
