@@ -32,10 +32,11 @@ def quantile_error(y_true,y_pred,q):
 def power_law_predict(x, C0, t):
     n = x[1]
     k = x[0]
-    y_pred = (C0 ** (1 - n) + (n - 1) * k * t) ** (1 / (1 - n))
+    a = (C0 ** (1 - n) + (n - 1) * k * t)
+    y_pred = np.sign(a) * (np.abs(a)) ** (1 / (1 - n))
     if len(y_pred)>1:
         y_pred[np.argwhere(y_pred < 0)] = 0
-        y_pred[np.argwhere((C0 ** (1 - n) + (n - 1) * k * t) < 0)] = 0
+        y_pred[np.argwhere(a < 0)] = 0
     return y_pred
 
 def first_order_predict(x,C0,t):
