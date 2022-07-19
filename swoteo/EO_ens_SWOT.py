@@ -39,7 +39,7 @@ class EO_Ensemble:
 
         self.version = "1.8.1"
 
-        self.inputtime = inputtime
+        self.inputtime = int(inputtime)
 
         self.decay_equations = ["First Order", "Power Decay", "Parallel First Order"]
 
