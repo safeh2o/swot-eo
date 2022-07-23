@@ -1433,7 +1433,7 @@ class EO_Ensemble:
         with tag("table", id="confidence_assess"):
             doc.asis(confidence)
 
-        file = open(os.path.join(self.savepath, "report.html", "w+"))
+        file = open(os.path.join(self.savepath, "report.html"), "w+")
         file.write(doc.getvalue())
         file.close
 
