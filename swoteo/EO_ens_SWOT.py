@@ -780,7 +780,7 @@ class EO_Ensemble:
             plt.xlabel(self.labels_dict[solver][0])
             plt.ylabel("Test MSE")
             plt.legend()
-            plt.savefig(self.savepath + "\\params.png")
+            plt.savefig(os.path.join(self.savepath, "params.png"))
 
             StringIOBytes_kn = io.BytesIO()
             plt.savefig(StringIOBytes_kn, format="png", bbox_inches="tight")
@@ -835,7 +835,7 @@ class EO_Ensemble:
             plt.xlabel(self.labels_dict[solver][0])
             plt.ylabel(self.labels_dict[solver][1])
             plt.legend()
-            plt.savefig(self.savepath + "\\params.png")
+            plt.savefig(os.path.join(self.savepath, "params.png"))
             StringIOBytes_kn = io.BytesIO()
             plt.savefig(StringIOBytes_kn, format="png", bbox_inches="tight")
             StringIOBytes_kn.seek(0)
@@ -972,7 +972,7 @@ class EO_Ensemble:
             ax.set_ylabel(self.labels_dict[solver][2])
             fig.legend(bbox_to_anchor=(0.55, 0.45), loc="upper left")
 
-            plt.savefig(self.savepath + "\\params.png")
+            plt.savefig(os.path.join(self.savepath, "params.png"))
             StringIOBytes_kn = io.BytesIO()
             plt.savefig(StringIOBytes_kn, format="png", bbox_inches="tight")
             StringIOBytes_kn.seek(0)
@@ -1147,7 +1147,7 @@ class EO_Ensemble:
             },
             index=self.confidence.keys(),
         )
-        confidence_df.to_csv(self.savepath + "\\confidence.csv")
+        confidence_df.to_csv(os.path.join(self.savepath, "confidence.csv"))
         str_io = io.StringIO()
 
         confidence_df.to_html(buf=str_io, table_id="confTable")
@@ -1184,7 +1184,7 @@ class EO_Ensemble:
         ax.legend(bbox_to_anchor=(0.999, 0.999), loc="upper right")
         ax.set_xlabel("Storage Duration (hours)")
         ax.set_ylabel("Required Tapstand FRC (mg/L)")
-        plt.savefig(self.savepath + "\\targets.png")
+        plt.savefig(os.path.join(self.savepath, "targets.png"))
         StringIOBytes_target = io.BytesIO()
         plt.savefig(StringIOBytes_target, format="png", bbox_inches="tight")
         StringIOBytes_target.seek(0)
@@ -1208,7 +1208,7 @@ class EO_Ensemble:
 
         ax.set_ylim([0, 0.3])
         ax.set_ylabel("Household FRC (mg/L)")
-        plt.savefig(self.savepath + "\\target_decay.png")
+        plt.savefig(os.path.join(self.savepath, "target_decay.png"))
         StringIOBytes_targetdecay = io.BytesIO()
         plt.savefig(StringIOBytes_targetdecay, format="png", bbox_inches="tight")
         StringIOBytes_targetdecay.seek(0)
@@ -1352,7 +1352,7 @@ class EO_Ensemble:
         # plt.grid()
         ax.set_xlabel("Tapstand FRC (mg/L)")
         ax.set_ylabel("Household FRC (mg/L)")
-        plt.savefig(self.savepath + "\\backcheck.png")
+        plt.savefig(os.path.join(self.savepath, "backcheck.png"))
         StringIOBytes_backcheck = io.BytesIO()
         plt.savefig(StringIOBytes_backcheck, format="png")
         StringIOBytes_backcheck.seek(0)
@@ -1403,7 +1403,7 @@ class EO_Ensemble:
             )
 
         with tag("div", id="target decay fig"):
-            doc.stag("img", src=(self.savepath + "\\targets.png"))
+            doc.stag("img", src=(os.path.join(self.savepath, "targets.png")))
 
         with tag("h2", klass="Header"):
             text(
@@ -1412,7 +1412,7 @@ class EO_Ensemble:
                 + " mg/L"
             )
         with tag("div", id="target_decay_fig"):
-            doc.stag("img", src=(self.savepath + "\\target_decay.png"))
+            doc.stag("img", src=(os.path.join(self.savepath, "target_decay.png")))
 
         with tag("h2", klass="Header"):
             text("Empirical Water Safety Backcheck")
@@ -1421,19 +1421,19 @@ class EO_Ensemble:
         with tag("p", klass="back_check_text_Target"):
             text(self.target_text)
         with tag("div", id="backcheck_fig"):
-            doc.stag("img", src=(self.savepath + "\\backcheck.png"))
+            doc.stag("img", src=(os.path.join(self.savepath, "backcheck.png")))
 
         with tag("h2", klass="Header"):
             text("Selected Model Parameters")
         with tag("div", id="params_fig"):
-            doc.stag("img", src=(self.savepath + "\\params.png"))
+            doc.stag("img", src=(os.path.join(self.savepath, "params.png")))
 
         with tag("h2", klass="Header"):
             text("Model Confidence Assessment")
         with tag("table", id="confidence_assess"):
             doc.asis(confidence)
 
-        file = open(self.savepath + "\\report.html", "w+")
+        file = open(os.path.join(self.savepath, "report.html", "w+"))
         file.write(doc.getvalue())
         file.close
 
