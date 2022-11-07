@@ -23,9 +23,9 @@ setuptools.setup(
     description="SWOT EO Project",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/safeh2o/swot_eo_python_analysis",
+    url="https://github.com/safeh2o/swot-eo",
     project_urls={
-        "Bug Tracker": "https://github.com/safeh2o/swot_eo_python_analysis/issues",
+        "Bug Tracker": "https://github.com/safeh2o/swot-eo/issues",
     },
     classifiers=[
         "Programming Language :: Python :: 3",
