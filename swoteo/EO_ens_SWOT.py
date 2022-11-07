@@ -1396,10 +1396,10 @@ class EO_Ensemble:
         with tag("p", klass="storage_duration"):
             text(
                 "Average Storage Duration: "
-                + str(np.round(st_dur, decimals=0))
+                + str(int(np.floor(st_dur)))
                 + " hours and "
-                + str(int((st_dur - np.round(st_dur, decimals=0)) * 60))
-                + "minutes"
+                + str(int((st_dur-np.floor(st_dur))*60))
+                + " minutes"
             )
 
         with tag("div", id="target decay fig"):
