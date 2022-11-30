@@ -12,7 +12,7 @@ from sklearn.metrics import r2_score
 from sklearn.model_selection import KFold, train_test_split
 from xlrd.xldate import xldate_as_datetime
 from yattag import Doc
-
+np.random.seed(0)
 from . import EO_functions
 
 plt.rcParams["figure.autolayout"] = True
@@ -643,7 +643,8 @@ class EO_Ensemble:
         for i in range(0, self.ensemble_size):
             guess = np.random.sample(self.nvar) * self.guess
             X_train, X_val, Y_train, Y_val = train_test_split(
-                self.X_cal, Y_cal, test_size=0.25, shuffle=True
+                self.X_cal, Y_cal, test_size=0.25, shuffle=True,
+                random_state=i**2
             )
             f0 = pd.Series(X_train["ts_frc"].values).to_numpy()
             t = pd.Series(X_train["se4_lag"].values).to_numpy()
@@ -692,7 +693,8 @@ class EO_Ensemble:
         for i in range(0, self.ensemble_size):
             guess = np.random.sample(self.nvar) * self.guess
             X_train, X_val, Y_train, Y_val = train_test_split(
-                X_cal, Y_cal, test_size=0.25, shuffle=True
+                X_cal, Y_cal, test_size=0.25, shuffle=True,
+                random_state=i**2
             )
             f0 = pd.Series(X_train["ts_frc"].values).to_numpy()
             t = pd.Series(X_train["se4_lag"].values).to_numpy()
@@ -1032,6 +1034,7 @@ class EO_Ensemble:
         for i in range(100):
             hh_check, drop, ts_check, drop2 = train_test_split(
                 hh_frc_combined, ts_frc_combined, test_size=0.1
+                
             )
             d, p = ks_2samp(ts_check, ts_frc_combined)
             ts_p_ks2.append(p)
