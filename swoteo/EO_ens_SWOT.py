@@ -12,10 +12,12 @@ from sklearn.metrics import r2_score
 from sklearn.model_selection import KFold, train_test_split
 from xlrd.xldate import xldate_as_datetime
 from yattag import Doc
+
 np.random.seed(0)
 from . import EO_functions
 
 plt.rcParams["figure.autolayout"] = True
+
 
 # np.random.seed(19231520)
 
@@ -289,27 +291,27 @@ class EO_Ensemble:
 
         # check 1 r2:
         check_r2_best = (np.max(self.test_r2[model]) - np.max(self.train_r2[model])) / (
-            1 - np.max(self.train_r2[model])
+                1 - np.max(self.train_r2[model])
         )
         check_r2_worst = (
-            np.percentile(self.test_r2[model], 75)
-            - np.percentile(self.train_r2[model], 75)
-        ) / (1 - np.percentile(self.train_r2[model], 75))
+                                 np.percentile(self.test_r2[model], 75)
+                                 - np.percentile(self.train_r2[model], 75)
+                         ) / (1 - np.percentile(self.train_r2[model], 75))
 
         # check 2:
         check_mse_best = (
-            np.min(self.test_MSE[model]) - np.min(self.train_MSE[model])
-        ) / np.min(self.train_MSE[model])
+                                 np.min(self.test_MSE[model]) - np.min(self.train_MSE[model])
+                         ) / np.min(self.train_MSE[model])
         check_mse_worst = (
-            np.percentile(self.test_MSE[model], 25)
-            - np.percentile(self.train_MSE[model], 25)
-        ) / np.percentile(self.train_MSE[model], 25)
+                                  np.percentile(self.test_MSE[model], 25)
+                                  - np.percentile(self.train_MSE[model], 25)
+                          ) / np.percentile(self.train_MSE[model], 25)
 
         if (
-            check_mse_best > 0.5
-            or check_mse_worst > 0.5
-            or check_r2_worst < -0.5
-            or check_r2_best < -0.5
+                check_mse_best > 0.5
+                or check_mse_worst > 0.5
+                or check_r2_worst < -0.5
+                or check_r2_best < -0.5
         ):
             self.convergence_checker[model] = False
 
@@ -402,8 +404,8 @@ class EO_Ensemble:
             return
 
         if (
-            np.isnan(self.targets["Power Decay"][self.scenario].loc[self.inputtime])
-            == True
+                np.isnan(self.targets["Power Decay"][self.scenario].loc[self.inputtime])
+                == True
         ):
             self.convergence_checker["Power Decay"] = False
             return
@@ -444,16 +446,16 @@ class EO_Ensemble:
             opt_targets.append(
                 fsolve(
                     lambda C_0: w_opt * C_0 * np.exp(-1 * k1_opt * t)
-                    + (1 - w_opt) * C_0 * np.exp(-1 * k2_opt * t)
-                    - 0.3,
+                                + (1 - w_opt) * C_0 * np.exp(-1 * k2_opt * t)
+                                - 0.3,
                     0.3,
                 )
             )
 
             targets = fsolve(
                 lambda C_0: w * C_0 * np.exp(-1 * k1 * t)
-                + (1 - w) * C_0 * np.exp(-1 * k2 * t)
-                - 0.3,
+                            + (1 - w) * C_0 * np.exp(-1 * k2 * t)
+                            - 0.3,
                 np.array([0.3 for i in range(len(w))]),
             )
             max_decay_targets.append(np.max(targets))
@@ -473,32 +475,32 @@ class EO_Ensemble:
             return
 
         if (
-            self.targets["Parallel First Order"][self.scenario].loc[self.inputtime]
-            < 0.3
-        ):
-            self.convergence_checker["Parallel First Order"] = False
-            return
-
-        if (
-            self.targets["Parallel First Order"][self.scenario].loc[self.inputtime]
-            > 100
-        ):
-            self.convergence_checker["Parallel First Order"] = False
-            return
-
-        if (
-            np.isnan(
                 self.targets["Parallel First Order"][self.scenario].loc[self.inputtime]
-            )
-            == True
+                < 0.3
+        ):
+            self.convergence_checker["Parallel First Order"] = False
+            return
+
+        if (
+                self.targets["Parallel First Order"][self.scenario].loc[self.inputtime]
+                > 100
+        ):
+            self.convergence_checker["Parallel First Order"] = False
+            return
+
+        if (
+                np.isnan(
+                    self.targets["Parallel First Order"][self.scenario].loc[self.inputtime]
+                )
+                == True
         ):
             self.convergence_checker["Parallel First Order"] = False
             return
 
         inp_target = fsolve(
             lambda C_0: w * C_0 * np.exp(-1 * k1 * self.inputtime)
-            + (1 - w) * C_0 * np.exp(-1 * k2 * self.inputtime)
-            - 0.3,
+                        + (1 - w) * C_0 * np.exp(-1 * k2 * self.inputtime)
+                        - 0.3,
             np.array([0.3 for i in range(len(w))]),
         )
         w_min, k1_min, k2_min, w_max, k1_max, k2_max = (
@@ -644,7 +646,7 @@ class EO_Ensemble:
             guess = np.random.sample(self.nvar) * self.guess
             X_train, X_val, Y_train, Y_val = train_test_split(
                 self.X_cal, Y_cal, test_size=0.25, shuffle=True,
-                random_state=i**2
+                random_state=i ** 2
             )
             f0 = pd.Series(X_train["ts_frc"].values).to_numpy()
             t = pd.Series(X_train["se4_lag"].values).to_numpy()
@@ -694,7 +696,7 @@ class EO_Ensemble:
             guess = np.random.sample(self.nvar) * self.guess
             X_train, X_val, Y_train, Y_val = train_test_split(
                 X_cal, Y_cal, test_size=0.25, shuffle=True,
-                random_state=i**2
+                random_state=i ** 2
             )
             f0 = pd.Series(X_train["ts_frc"].values).to_numpy()
             t = pd.Series(X_train["se4_lag"].values).to_numpy()
@@ -732,8 +734,8 @@ class EO_Ensemble:
     def k_n_fig(self, solver):
 
         if len(self.labels_dict[solver]) == 1:
-            fig = plt.figure()
-            plt.scatter(
+            fig, ax = plt.subplots(1, 1)
+            ax.scatter(
                 self.SSE_ensemble_params[solver],
                 self.test_MSE[solver],
                 marker="o",
@@ -741,7 +743,7 @@ class EO_Ensemble:
                 facecolors="none",
                 linewidths=0.5,
             )
-            plt.scatter(
+            ax.scatter(
                 self.opt_params[solver],
                 np.min(self.test_MSE[solver]),
                 marker="*",
@@ -749,7 +751,7 @@ class EO_Ensemble:
                 c="#0000ff",
                 label="Optimum Decay Parameters",
             )
-            plt.scatter(
+            ax.scatter(
                 self.CI_params[solver],
                 self.test_MSE[solver][
                     np.argwhere(
@@ -762,7 +764,7 @@ class EO_Ensemble:
                 linewidths=0.5,
                 label="75% Confidence Region",
             )
-            plt.scatter(
+            ax.scatter(
                 self.min_params[solver][0],
                 np.min(self.min_params[solver][1]),
                 marker="*",
@@ -770,7 +772,7 @@ class EO_Ensemble:
                 c="#00ff00",
                 label="Minimum Decay Parameters",
             )
-            plt.scatter(
+            ax.scatter(
                 self.max_params[solver][0],
                 np.min(self.max_params[solver][1]),
                 marker="*",
@@ -778,10 +780,10 @@ class EO_Ensemble:
                 c="#ff0000",
                 label="Maximum Decay Parameters",
             )
-            plt.title(solver)
-            plt.xlabel(self.labels_dict[solver][0])
-            plt.ylabel("Test MSE")
-            plt.legend()
+            ax.set_title(solver)
+            ax.set_xlabel(self.labels_dict[solver][0])
+            ax.set_ylabel("Test MSE")
+            ax.legend()
             plt.savefig(os.path.join(self.savepath, "params.png"))
 
             StringIOBytes_kn = io.BytesIO()
@@ -791,8 +793,8 @@ class EO_Ensemble:
             plt.close()
             return
         elif len(self.labels_dict[solver]) == 2:
-            fig = plt.figure()
-            plt.scatter(
+            fig, ax = plt.subplots(1, 1)
+            ax.scatter(
                 self.SSE_ensemble_params[solver][:, 0],
                 self.SSE_ensemble_params[solver][:, 1],
                 marker="o",
@@ -800,7 +802,7 @@ class EO_Ensemble:
                 facecolors="none",
                 linewidths=0.5,
             )
-            plt.scatter(
+            ax.scatter(
                 self.opt_params[solver][0],
                 self.opt_params[solver][1],
                 marker="*",
@@ -809,7 +811,7 @@ class EO_Ensemble:
                 label="Optimum Decay Parameters",
             )
             if len(self.SSE_ensemble_params[solver]) > 1:
-                plt.scatter(
+                ax.scatter(
                     self.CI_params[solver][0],
                     self.CI_params[solver][1],
                     edgecolors="#0000ff",
@@ -817,7 +819,7 @@ class EO_Ensemble:
                     linewidths=0.5,
                     label="75% Confidence Region",
                 )
-                plt.scatter(
+                ax.scatter(
                     self.min_params[solver][0],
                     self.min_params[solver][1],
                     marker="*",
@@ -825,7 +827,7 @@ class EO_Ensemble:
                     c="#00ff00",
                     label="Minimum Decay Parameters",
                 )
-                plt.scatter(
+                ax.scatter(
                     self.max_params[solver][0],
                     self.max_params[solver][1],
                     marker="*",
@@ -833,10 +835,10 @@ class EO_Ensemble:
                     c="#ff0000",
                     label="Maximum Decay Parameters",
                 )
-            plt.title(solver)
-            plt.xlabel(self.labels_dict[solver][0])
-            plt.ylabel(self.labels_dict[solver][1])
-            plt.legend()
+            ax.set_title(solver)
+            ax.set_xlabel(self.labels_dict[solver][0])
+            ax.set_ylabel(self.labels_dict[solver][1])
+            ax.legend()
             plt.savefig(os.path.join(self.savepath, "params.png"))
             StringIOBytes_kn = io.BytesIO()
             plt.savefig(StringIOBytes_kn, format="png", bbox_inches="tight")
@@ -865,7 +867,7 @@ class EO_Ensemble:
                 label="Optimum Decay Parameters",
             )
             if len(self.SSE_ensemble_params[solver]) > 1:
-                plt.scatter(
+                ax.scatter(
                     self.CI_params[solver][0][1],
                     self.CI_params[solver][0][2],
                     edgecolors="#0000ff",
@@ -873,7 +875,7 @@ class EO_Ensemble:
                     linewidths=0.5,
                     label="75% Confidence Region",
                 )
-                plt.scatter(
+                ax.scatter(
                     self.min_params[solver][1],
                     self.min_params[solver][2],
                     marker="*",
@@ -881,7 +883,7 @@ class EO_Ensemble:
                     c="#00ff00",
                     label="Minimum Decay Parameters",
                 )
-                plt.scatter(
+                ax.scatter(
                     self.max_params[solver][1],
                     self.max_params[solver][2],
                     marker="*",
@@ -909,20 +911,20 @@ class EO_Ensemble:
                 c="#0000ff",
             )
             if len(self.SSE_ensemble_params[solver]) > 1:
-                plt.scatter(
+                ax.scatter(
                     self.CI_params[solver][0][0],
                     self.CI_params[solver][0][1],
                     edgecolors="#0000ff",
                     facecolors="none",
                 )
-                plt.scatter(
+                ax.scatter(
                     self.min_params[solver][0],
                     self.min_params[solver][1],
                     marker="*",
                     s=100,
                     c="#00ff00",
                 )
-                plt.scatter(
+                ax.scatter(
                     self.max_params[solver][0],
                     self.max_params[solver][1],
                     marker="*",
@@ -949,21 +951,21 @@ class EO_Ensemble:
                 c="#0000ff",
             )
             if len(self.SSE_ensemble_params[solver]) > 1:
-                plt.scatter(
+                ax.scatter(
                     self.CI_params[solver][0][0],
                     self.CI_params[solver][0][2],
                     edgecolors="#0000ff",
                     facecolors="none",
                     linewidths=0.5,
                 )
-                plt.scatter(
+                ax.scatter(
                     self.min_params[solver][0],
                     self.min_params[solver][2],
                     marker="*",
                     s=100,
                     c="#00ff00",
                 )
-                plt.scatter(
+                ax.scatter(
                     self.max_params[solver][0],
                     self.max_params[solver][2],
                     marker="*",
@@ -1034,7 +1036,7 @@ class EO_Ensemble:
         for i in range(100):
             hh_check, drop, ts_check, drop2 = train_test_split(
                 hh_frc_combined, ts_frc_combined, test_size=0.1
-                
+
             )
             d, p = ks_2samp(ts_check, ts_frc_combined)
             ts_p_ks2.append(p)
@@ -1258,13 +1260,13 @@ class EO_Ensemble:
                 decimals=1,
             )
             self.sphere_text = (
-                "Existing Guidelines, 0.2-0.5 mg/L, "
-                + str(sphere_safe_cal + sphere_safe_test)
-                + " of "
-                + str(sphere_total_cal + sphere_total_test)
-                + ", "
-                + str(np.round(sphere_safe_percent, decimals=1))
-                + "% household water safety success rate"
+                    "Existing Guidelines, 0.2-0.5 mg/L, "
+                    + str(sphere_safe_cal + sphere_safe_test)
+                    + " of "
+                    + str(sphere_total_cal + sphere_total_test)
+                    + ", "
+                    + str(np.round(sphere_safe_percent, decimals=1))
+                    + "% household water safety success rate"
             )
         else:
             self.sphere_text = "Existing Guidelines, 0.2-0.5 mg/L, Water safety success rate unavailable (no samples with similar storage duration and target)"
@@ -1281,30 +1283,30 @@ class EO_Ensemble:
 
         if (target_cal_total + target_total_test) > 0:
             target_safe_percent = (
-                (target_cal_safe + target_test_safe)
-                / (target_cal_total + target_total_test)
-                * 100
+                    (target_cal_safe + target_test_safe)
+                    / (target_cal_total + target_total_test)
+                    * 100
             )
             self.target_text = (
-                "Proposed Guidelines, "
-                + str(np.round(target, decimals=2))
-                + "-"
-                + str(np.round(target + 0.2, decimals=2))
-                + " mg/L, "
-                + str(target_cal_safe + target_test_safe)
-                + " of "
-                + str(target_cal_total + target_total_test)
-                + ", "
-                + str(np.round(target_safe_percent, decimals=1))
-                + "% household water safety success rate"
+                    "Proposed Guidelines, "
+                    + str(np.round(target, decimals=2))
+                    + "-"
+                    + str(np.round(target + 0.2, decimals=2))
+                    + " mg/L, "
+                    + str(target_cal_safe + target_test_safe)
+                    + " of "
+                    + str(target_cal_total + target_total_test)
+                    + ", "
+                    + str(np.round(target_safe_percent, decimals=1))
+                    + "% household water safety success rate"
             )
         else:
             self.target_text = (
-                "Proposed Guidelines, "
-                + str(np.round(target, decimals=2))
-                + "-"
-                + str(np.round(target + 0.2, decimals=2))
-                + " mg/L, Water safety success rate unavailable (no samples with similar storage duration and target)"
+                    "Proposed Guidelines, "
+                    + str(np.round(target, decimals=2))
+                    + "-"
+                    + str(np.round(target + 0.2, decimals=2))
+                    + " mg/L, Water safety success rate unavailable (no samples with similar storage duration and target)"
             )
 
         box_props = dict(boxstyle="square", facecolor="white", alpha=0.5)
@@ -1401,7 +1403,7 @@ class EO_Ensemble:
                 "Average Storage Duration: "
                 + str(int(np.floor(st_dur)))
                 + " hours and "
-                + str(int((st_dur-np.floor(st_dur))*60))
+                + str(int((st_dur - np.floor(st_dur)) * 60))
                 + " minutes"
             )
 
