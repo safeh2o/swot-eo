@@ -734,7 +734,7 @@ class EO_Ensemble:
     def k_n_fig(self, solver):
 
         if len(self.labels_dict[solver]) == 1:
-            fig, ax = plt.subplots(1, 1)
+            kn_fig, ax = plt.subplots(1, 1)
             ax.scatter(
                 self.SSE_ensemble_params[solver],
                 self.test_MSE[solver],
@@ -784,16 +784,16 @@ class EO_Ensemble:
             ax.set_xlabel(self.labels_dict[solver][0])
             ax.set_ylabel("Test MSE")
             ax.legend()
-            plt.savefig(os.path.join(self.savepath, "params.png"))
+            kn_fig.savefig(os.path.join(self.savepath, "params.png"))
 
             StringIOBytes_kn = io.BytesIO()
-            plt.savefig(StringIOBytes_kn, format="png", bbox_inches="tight")
+            kn_fig.savefig(StringIOBytes_kn, format="png", bbox_inches="tight")
             StringIOBytes_kn.seek(0)
             self.kn_base_64_pngData = base64.b64encode(StringIOBytes_kn.read())
-            plt.close()
+            plt.close(kn_fig)
             return
         elif len(self.labels_dict[solver]) == 2:
-            fig, ax = plt.subplots(1, 1)
+            kn_fig, ax = plt.subplots(1, 1)
             ax.scatter(
                 self.SSE_ensemble_params[solver][:, 0],
                 self.SSE_ensemble_params[solver][:, 1],
@@ -839,17 +839,17 @@ class EO_Ensemble:
             ax.set_xlabel(self.labels_dict[solver][0])
             ax.set_ylabel(self.labels_dict[solver][1])
             ax.legend()
-            plt.savefig(os.path.join(self.savepath, "params.png"))
+            kn_fig.savefig(os.path.join(self.savepath, "params.png"))
             StringIOBytes_kn = io.BytesIO()
-            plt.savefig(StringIOBytes_kn, format="png", bbox_inches="tight")
+            kn_fig.savefig(StringIOBytes_kn, format="png", bbox_inches="tight")
             StringIOBytes_kn.seek(0)
             self.kn_base_64_pngData = base64.b64encode(StringIOBytes_kn.read())
-            plt.close()
+            plt.close(kn_fig)
             return
         elif len(self.labels_dict[solver]) == 3:
-            fig = plt.figure()
+            kn_fig, ax = plt.subplots(1, 1)
             plt.suptitle(solver)
-            ax = fig.add_subplot(221)
+            ax = kn_fig.add_subplot(221)
             ax.scatter(
                 self.SSE_ensemble_params[solver][:, 1],
                 self.SSE_ensemble_params[solver][:, 2],
@@ -894,7 +894,7 @@ class EO_Ensemble:
             ax.set_xlabel(self.labels_dict[solver][1])
             ax.set_ylabel(self.labels_dict[solver][2])
 
-            ax = fig.add_subplot(223)
+            ax = kn_fig.add_subplot(223)
             ax.scatter(
                 self.SSE_ensemble_params[solver][:, 0],
                 self.SSE_ensemble_params[solver][:, 1],
@@ -934,7 +934,7 @@ class EO_Ensemble:
             ax.set_xlabel(self.labels_dict[solver][0])
             ax.set_ylabel(self.labels_dict[solver][1])
 
-            ax = fig.add_subplot(222)
+            ax = kn_fig.add_subplot(222)
             ax.scatter(
                 self.SSE_ensemble_params[solver][:, 0],
                 self.SSE_ensemble_params[solver][:, 2],
@@ -974,14 +974,14 @@ class EO_Ensemble:
                 )
             ax.set_xlabel(self.labels_dict[solver][0])
             ax.set_ylabel(self.labels_dict[solver][2])
-            fig.legend(bbox_to_anchor=(0.55, 0.45), loc="upper left")
+            kn_fig.legend(bbox_to_anchor=(0.55, 0.45), loc="upper left")
 
-            plt.savefig(os.path.join(self.savepath, "params.png"))
+            kn_fig.savefig(os.path.join(self.savepath, "params.png"))
             StringIOBytes_kn = io.BytesIO()
-            plt.savefig(StringIOBytes_kn, format="png", bbox_inches="tight")
+            kn_fig.savefig(StringIOBytes_kn, format="png", bbox_inches="tight")
             StringIOBytes_kn.seek(0)
             self.kn_base_64_pngData = base64.b64encode(StringIOBytes_kn.read())
-            plt.close()
+            plt.close(kn_fig)
             return
 
     def confidence_assess(self):
@@ -1168,7 +1168,7 @@ class EO_Ensemble:
         return FRC_target
 
     def target_fig(self, target):
-        fig, ax = plt.subplots(figsize=(8, 5.5))
+        target_fig, ax = plt.subplots(figsize=(8, 5.5))
         ax.set_title("Required FRC Over Time", fontsize=10)
         ax.plot(
             self.targets[self.model].index,
@@ -1189,12 +1189,12 @@ class EO_Ensemble:
         ax.legend(bbox_to_anchor=(0.999, 0.999), loc="upper right")
         ax.set_xlabel("Storage Duration (hours)")
         ax.set_ylabel("Required Tapstand FRC (mg/L)")
-        plt.savefig(os.path.join(self.savepath, "targets.png"))
+        target_fig.savefig(os.path.join(self.savepath, "targets.png"))
         StringIOBytes_target = io.BytesIO()
-        plt.savefig(StringIOBytes_target, format="png", bbox_inches="tight")
+        target_fig.savefig(StringIOBytes_target, format="png", bbox_inches="tight")
         StringIOBytes_target.seek(0)
         self.target_base_64_pngData = base64.b64encode(StringIOBytes_target.read())
-        plt.close()
+        plt.close(target_fig)
 
         times = np.arange(self.inputtime, 37, 3)
         params = self.opt_params[self.model]
@@ -1202,7 +1202,7 @@ class EO_Ensemble:
             params, np.array([target for i in range(len(times))]), times
         )
 
-        fig, ax = plt.subplots(figsize=(8, 5.5))
+        decay_fig, ax = plt.subplots(figsize=(8, 5.5))
         ax.set_title("Household FRC After Target Storage Duration", fontsize=10)
         ax.plot(times, pred, c="b")
 
@@ -1213,14 +1213,14 @@ class EO_Ensemble:
 
         ax.set_ylim([0, 0.3])
         ax.set_ylabel("Household FRC (mg/L)")
-        plt.savefig(os.path.join(self.savepath, "target_decay.png"))
+        decay_fig.savefig(os.path.join(self.savepath, "target_decay.png"))
         StringIOBytes_targetdecay = io.BytesIO()
-        plt.savefig(StringIOBytes_targetdecay, format="png", bbox_inches="tight")
+        decay_fig.savefig(StringIOBytes_targetdecay, format="png", bbox_inches="tight")
         StringIOBytes_targetdecay.seek(0)
         self.targetdecay_base_64_pngData = base64.b64encode(
             StringIOBytes_targetdecay.read()
         )
-        plt.close()
+        plt.close(decay_fig)
         return
 
     def back_check_fig(self, target):
@@ -1357,14 +1357,14 @@ class EO_Ensemble:
         # plt.grid()
         ax.set_xlabel("Tapstand FRC (mg/L)")
         ax.set_ylabel("Household FRC (mg/L)")
-        plt.savefig(os.path.join(self.savepath, "backcheck.png"))
+        backcheck_fig.savefig(os.path.join(self.savepath, "backcheck.png"))
         StringIOBytes_backcheck = io.BytesIO()
-        plt.savefig(StringIOBytes_backcheck, format="png")
+        backcheck_fig.savefig(StringIOBytes_backcheck, format="png")
         StringIOBytes_backcheck.seek(0)
         self.backcheck_base_64_pngData = base64.b64encode(
             StringIOBytes_backcheck.read()
         )
-        plt.close()
+        plt.close(backcheck_fig)
         return
 
     def select_model(self):
