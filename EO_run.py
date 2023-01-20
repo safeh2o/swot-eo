@@ -2,14 +2,15 @@ import sys
 
 from swoteo.EO_ens_SWOT import EO_Ensemble
 
-data_path = "C:\\Users\\micha\\Research\\SWOT\\Operations\\Data\\Somaliland\\"
-#files = [file.name for file in os.scandir(data_path) if file.is_file()]
-files=['SOM_Piped_baseline_SWOT_150.csv']
-for file in files:
+savepath = sys.argv[1]
+inputpath = sys.argv[2]
+inputtime = sys.argv[3]
+scenario = sys.argv[4]  # Has to be 'optimumDecay', or 'minDecay', or 'maxDecay'
 
-    inputtime = 18
-    scenario='maxDecay' #Has to be 'Optimum Decay', 'Maximum Decay', or 'Minimum Decay'
+# savepath = "res"
+# inputpath = "tests/test1.csv"
+# inputtime = 3
+# scenario = "optimumDecay"
 
-    eo_ens = EO_Ensemble(inputtime,data_path,
-                         data_path+"\\"+file, scenario)
-    best_params=eo_ens.run_EO()
+eo_ens = EO_Ensemble(inputtime, savepath, inputpath, scenario)
+eo_ens.run_EO()
