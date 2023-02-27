@@ -12,15 +12,12 @@ from sklearn.metrics import r2_score
 from sklearn.model_selection import KFold, train_test_split
 from xlrd.xldate import xldate_as_datetime
 from yattag import Doc
-
 np.random.seed(0)
 from . import EO_functions
 
 plt.rcParams["figure.autolayout"] = True
 
-
 # np.random.seed(19231520)
-
 
 class EO_Ensemble:
     def __init__(self, inputtime, savepath, inputpath, scenario):
@@ -420,8 +417,8 @@ class EO_Ensemble:
 
         self.opt_params["Power Decay"] = opt_params
         self.CI_params["Power Decay"] = params
-        self.min_params["Power Decay"] = [n_min, k_min]
-        self.max_params["Power Decay"] = [n_max, k_max]
+        self.min_params["Power Decay"] = [k_min,n_min]
+        self.max_params["Power Decay"] = [k_max,n_max ]
         return
 
     def pfo_targets(self):
@@ -732,9 +729,34 @@ class EO_Ensemble:
         )
 
     def k_n_fig(self, solver):
-
         if len(self.labels_dict[solver]) == 1:
-            kn_fig, ax = plt.subplots(1, 1)
+            np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_series1_scatter.csv"),
+                       np.transpose([self.SSE_ensemble_params[solver].flatten(),self.test_MSE[solver]]),
+                       delimiter=',')
+            np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_series2_scatter.csv"),
+                       np.transpose([np.array(self.CI_params[solver]).flatten(),
+                        np.array(self.test_MSE[solver][
+                            np.argwhere(self.test_MSE[solver] <= np.percentile(self.test_MSE[solver], 25))]).flatten()]),
+                       delimiter=',')
+            np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_optseries_scatter.csv"),
+                       np.append(self.opt_params[solver], np.min(self.test_MSE[solver])),
+                       delimiter=',')
+
+            np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_minseries_scatter.csv"),
+                       np.append(self.min_params[solver][0],np.min(self.min_params[solver][1])),
+                       delimiter=',')
+
+            np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_maxseries_scatter.csv"),
+                       np.append(self.max_params[solver][0],np.min(self.max_params[solver][1])),
+                       delimiter=',')
+
+            param_df=pd.DataFrame({"Decay Rate (k)":[self.opt_params[solver][0],self.max_params[solver][0],self.min_params[solver][0]]},index=['Optimum Decay','Maximum Decay','Minimum Decay'])
+            param_df.index.name='Scenario'
+            str_io=io.StringIO()
+            param_df.to_html(buf=str_io, table_id="paramTable")
+            self.params_table_html=str_io.getvalue()
+
+            '''kn_fig, ax = plt.subplots(1, 1)
             ax.scatter(
                 self.SSE_ensemble_params[solver],
                 self.test_MSE[solver],
@@ -790,10 +812,40 @@ class EO_Ensemble:
             kn_fig.savefig(StringIOBytes_kn, format="png", bbox_inches="tight")
             StringIOBytes_kn.seek(0)
             self.kn_base_64_pngData = base64.b64encode(StringIOBytes_kn.read())
-            plt.close(kn_fig)
+            plt.close(kn_fig)'''
             return
         elif len(self.labels_dict[solver]) == 2:
-            kn_fig, ax = plt.subplots(1, 1)
+            np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_series1_scatter.csv"),
+                       np.transpose([self.SSE_ensemble_params[solver][:, 0],
+                self.SSE_ensemble_params[solver][:, 1]]),
+                       delimiter=',')
+
+            np.savetxt(os.path.join(self.savepath, "params_fig_2_plot_series2_scatter.csv"),
+                       np.transpose([self.CI_params[solver][0],
+                    self.CI_params[solver][1]]),
+                       delimiter=',')
+            np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_optseries_scatter.csv"),
+                       np.append(self.opt_params[solver][0], self.opt_params[solver][1]),
+                       delimiter=',')
+
+            np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_minseries_scatter.csv"),
+                       np.append(self.min_params[solver][0], self.min_params[solver][1]),
+                       delimiter=',')
+
+            np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_maxseries_scatter.csv"),
+                       np.append(self.max_params[solver][0], self.max_params[solver][1]),
+                       delimiter=',')
+
+            param_df = pd.DataFrame({"Decay Rate (k)": [self.opt_params[solver][0], self.max_params[solver][0],
+                                                        self.min_params[solver][0]],"Decay Order (n)":[self.opt_params[solver][1], self.max_params[solver][1],
+                                                        self.min_params[solver][1]]},
+                                    index=['Optimum Decay', 'Maximum Decay', 'Minimum Decay'])
+            param_df.index.name = 'Scenario'
+            str_io = io.StringIO()
+            param_df.to_html(buf=str_io, table_id="paramTable")
+            self.params_table_html = str_io.getvalue()
+
+            '''kn_fig, ax = plt.subplots(1, 1)
             ax.scatter(
                 self.SSE_ensemble_params[solver][:, 0],
                 self.SSE_ensemble_params[solver][:, 1],
@@ -844,10 +896,46 @@ class EO_Ensemble:
             kn_fig.savefig(StringIOBytes_kn, format="png", bbox_inches="tight")
             StringIOBytes_kn.seek(0)
             self.kn_base_64_pngData = base64.b64encode(StringIOBytes_kn.read())
-            plt.close(kn_fig)
+            plt.close(kn_fig)'''
             return
         elif len(self.labels_dict[solver]) == 3:
-            kn_fig, ax = plt.subplots(1, 1)
+
+            np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_series1_scatter.csv"),
+                       np.transpose([self.SSE_ensemble_params[solver][:, 0],
+                                     self.SSE_ensemble_params[solver][:, 1],
+                                    self.SSE_ensemble_params[solver][:, 2]]),
+                       delimiter=',')
+
+            np.savetxt(os.path.join(self.savepath, "params_fig_2_plot_series2_scatter.csv"),
+                       np.transpose([self.CI_params[solver][0],
+                                     self.CI_params[solver][1],
+                                     self.CI_params[solver][2]]),
+                       delimiter=',')
+            np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_optseries_scatter.csv"),
+                       np.array([self.opt_params[solver][0], self.opt_params[solver][1],self.opt_params[solver][2]]),
+                       delimiter=',')
+
+            np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_minseries_scatter.csv"),
+                       np.array([self.min_params[solver][0], self.min_params[solver][1],self.min_params[solver][2]]),
+                       delimiter=',')
+
+            np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_maxseries_scatter.csv"),
+                       np.array([self.max_params[solver][0], self.max_params[solver][1],self.max_params[solver][2]]),
+                       delimiter=',')
+
+            param_df = pd.DataFrame({"Ratio of Slow to Fast Decay (w)": [self.opt_params[solver][0], self.max_params[solver][0],
+                                                        self.min_params[solver][0]],
+                                     "Slow Decay Rate (k1)": [self.opt_params[solver][1], self.max_params[solver][1],
+                                                         self.min_params[solver][1]],"Fast Decay Rate (k1)":[self.opt_params[solver][2], self.max_params[solver][2],
+                                                         self.min_params[solver][2]]},
+                                    index=['Optimum Decay', 'Maximum Decay', 'Minimum Decay'])
+            param_df.index.name = 'Scenario'
+            str_io = io.StringIO()
+            param_df.to_html(buf=str_io, table_id="paramTable")
+            self.params_table_html = str_io.getvalue()
+
+
+            '''kn_fig, ax = plt.subplots(1, 1)
             plt.suptitle(solver)
             ax = kn_fig.add_subplot(221)
             ax.scatter(
@@ -981,7 +1069,7 @@ class EO_Ensemble:
             kn_fig.savefig(StringIOBytes_kn, format="png", bbox_inches="tight")
             StringIOBytes_kn.seek(0)
             self.kn_base_64_pngData = base64.b64encode(StringIOBytes_kn.read())
-            plt.close(kn_fig)
+            plt.close(kn_fig)'''
             return
 
     def confidence_assess(self):
@@ -1168,7 +1256,26 @@ class EO_Ensemble:
         return FRC_target
 
     def target_fig(self, target):
-        target_fig, ax = plt.subplots(figsize=(8, 5.5))
+        np.savetxt(os.path.join(self.savepath, "targets_fig_series1_line.csv"),
+                   np.transpose([self.targets[self.model].index,self.targets[self.model][self.scenario]]),
+                   delimiter=',')
+        hist_bars=np.histogram(np.append(self.X_cal["se4_lag"].values, self.t_test).flatten())
+        widths=hist_bars[1][1]-hist_bars[1][0]
+        xs=hist_bars[1][:-1]-widths/2
+        np.savetxt(os.path.join(self.savepath, "targets_fig_series2_bar_width_"+str(widths)+".csv"),
+                   np.transpose([xs,hist_bars[0]]),
+                   delimiter=',')
+        np.savetxt(os.path.join(self.savepath, "targets_fig_series3_vertline.csv"),
+                   np.transpose([[self.inputtime,self.inputtime],[0,np.max(self.targets[self.model][self.scenario])]]),
+                   delimiter=',')
+
+        str_io = io.StringIO()
+        self.targets[self.model].index.name = 'Storage Duration'
+        self.targets[self.model].to_html(buf=str_io, table_id="targetTable")
+        self.targets_table_html=str_io.getvalue()
+
+
+        '''target_fig, ax = plt.subplots(figsize=(8, 5.5))
         ax.set_title("Required FRC Over Time", fontsize=10)
         ax.plot(
             self.targets[self.model].index,
@@ -1194,7 +1301,7 @@ class EO_Ensemble:
         target_fig.savefig(StringIOBytes_target, format="png", bbox_inches="tight")
         StringIOBytes_target.seek(0)
         self.target_base_64_pngData = base64.b64encode(StringIOBytes_target.read())
-        plt.close(target_fig)
+        plt.close(target_fig)'''
 
         times = np.arange(self.inputtime, 37, 3)
         params = self.opt_params[self.model]
@@ -1202,7 +1309,20 @@ class EO_Ensemble:
             params, np.array([target for i in range(len(times))]), times
         )
 
-        decay_fig, ax = plt.subplots(figsize=(8, 5.5))
+        np.savetxt(os.path.join(self.savepath, "decay_fig_series1_line.csv"),
+                   np.transpose([times, pred]),
+                   delimiter=',')
+        np.savetxt(os.path.join(self.savepath, "decay_fig_series2_horizline.csv"),
+                   np.transpose([[np.max(times),np.min(times)],[0.2,0.2]]),
+                   delimiter=',')
+
+        str_io2 = io.StringIO()
+        df_decay=pd.DataFrame({"Predicted Household FRC":pred},index=times)
+        df_decay.index.name='Storage Duration'
+        df_decay.to_html(buf=str_io2, table_id="targetTable")
+        self.decay_table_html = str_io2.getvalue()
+
+        '''decay_fig, ax = plt.subplots(figsize=(8, 5.5))
         ax.set_title("Household FRC After Target Storage Duration", fontsize=10)
         ax.plot(times, pred, c="b")
 
@@ -1220,7 +1340,7 @@ class EO_Ensemble:
         self.targetdecay_base_64_pngData = base64.b64encode(
             StringIOBytes_targetdecay.read()
         )
-        plt.close(decay_fig)
+        plt.close(decay_fig)'''
         return
 
     def back_check_fig(self, target):
@@ -1310,8 +1430,32 @@ class EO_Ensemble:
             )
 
         box_props = dict(boxstyle="square", facecolor="white", alpha=0.5)
+        frc_combined=np.append(test_df['hh_frc'].values,cal_df['hh_frc'].values)
+        if len(frc_combined)>0:
+            max_frc=np.max(frc_combined)
+        else:
+            max_frc=2
+        np.savetxt(os.path.join(self.savepath, "backcheck_fig_series1_scatter.csv"),
+                   np.transpose([test_df["ts_frc"].values,test_df["hh_frc"].values]),
+                   delimiter=',')
+        np.savetxt(os.path.join(self.savepath, "backcheck_fig_series2_scatter.csv"),
+                   np.transpose([cal_df["ts_frc"].values, cal_df["hh_frc"].values]),
+                   delimiter=',')
 
-        backcheck_fig, ax = plt.subplots(figsize=(8, 5.5))
+        np.savetxt(os.path.join(self.savepath, "backcheck_fig_series3_vertline.csv"),
+                   np.transpose([[0.2,0.2],[0,max_frc]]),
+                   delimiter=',')
+        np.savetxt(os.path.join(self.savepath, "backcheck_fig_series4_vertline.csv"),
+                   np.transpose([[0.5, 0.5], [0, max_frc]]),
+                   delimiter=',')
+        np.savetxt(os.path.join(self.savepath, "backcheck_fig_series5_vertline.csv"),
+                   np.transpose([[target, target], [0, max_frc]]),
+                   delimiter=',')
+        np.savetxt(os.path.join(self.savepath, "backcheck_fig_series6_vertline.csv"),
+                   np.transpose([[target+0.2, target+0.2], [0, max_frc]]),
+                   delimiter=',')
+
+        '''backcheck_fig, ax = plt.subplots(figsize=(8, 5.5))
         ax.set_title(
             "SWOT Engineering Optimization Model - Empirical Back-Check at "
             + str(time_lb)
@@ -1364,7 +1508,7 @@ class EO_Ensemble:
         self.backcheck_base_64_pngData = base64.b64encode(
             StringIOBytes_backcheck.read()
         )
-        plt.close(backcheck_fig)
+        plt.close(backcheck_fig)'''
         return
 
     def select_model(self):
@@ -1380,10 +1524,10 @@ class EO_Ensemble:
         return
 
     def generate_html_report(self, confidence):
-        targets = self.target_base_64_pngData.decode("UTF-8")
-        target_decay = self.targetdecay_base_64_pngData.decode("UTF-8")
-        backcheck = self.backcheck_base_64_pngData.decode("UTF-8")
-        k_n = self.kn_base_64_pngData.decode("UTF-8")
+        #targets = self.target_base_64_pngData.decode("UTF-8")
+        #target_decay = self.targetdecay_base_64_pngData.decode("UTF-8")
+        #backcheck = self.backcheck_base_64_pngData.decode("UTF-8")
+        #k_n = self.kn_base_64_pngData.decode("UTF-8")
 
         st_dur = np.mean(np.append(self.X_cal["se4_lag"].values, self.t_test))
 
@@ -1394,8 +1538,24 @@ class EO_Ensemble:
             text("SWOT EO Version: " + self.version)
         with tag("h2", klass="Header"):
             text("Recommended Tapstand FRC Target: " + str(self.target) + "mg/L")
+        with tag("p", klass="storage_target"):
+            text("Target Storage Duration: " + str(self.inputtime) + " hours")
+        with tag("p",klass="scenario"):
+            text("Scenario: "+self.scenario)
+        with tag("h2",klass="Header"):
+            text("Required FRC over Time")
+        with tag("table",id="targets_table"):
+            doc.asis(self.targets_table_html)
+
+
         with tag("p", klass="model_selected"):
             text("Decay model used: " + self.model)
+
+        with tag("h2",klass="model_params"):
+            text("Model parameters")
+        with tag("table",id="params_table"):
+            doc.asis(self.params_table_html)
+        #elif len(self.labels_dict[self.model]) == 2:
         with tag("p", klass="storage_target"):
             text("Target Storage Duration: " + str(self.inputtime) + " hours")
         with tag("p", klass="storage_duration"):
@@ -1407,17 +1567,15 @@ class EO_Ensemble:
                 + " minutes"
             )
 
-        with tag("div", id="target decay fig"):
-            doc.stag("img", src=(os.path.join(self.savepath, "targets.png")))
 
         with tag("h2", klass="Header"):
             text(
-                "Anticipated household FRC after storage target for Tapstand FRC of "
+                "Anticipated household FRC after storage target for tapstand FRC of "
                 + str(self.target)
                 + " mg/L"
             )
-        with tag("div", id="target_decay_fig"):
-            doc.stag("img", src=(os.path.join(self.savepath, "target_decay.png")))
+        with tag("table", id="target decay table"):
+            doc.asis(self.decay_table_html)
 
         with tag("h2", klass="Header"):
             text("Empirical Water Safety Backcheck")
@@ -1425,13 +1583,11 @@ class EO_Ensemble:
             text(self.sphere_text)
         with tag("p", klass="back_check_text_Target"):
             text(self.target_text)
-        with tag("div", id="backcheck_fig"):
-            doc.stag("img", src=(os.path.join(self.savepath, "backcheck.png")))
 
-        with tag("h2", klass="Header"):
-            text("Selected Model Parameters")
-        with tag("div", id="params_fig"):
-            doc.stag("img", src=(os.path.join(self.savepath, "params.png")))
+        #with tag("h2", klass="Header"):
+        #    text("Selected Model Parameters")
+        #with tag("div", id="params_fig"):
+        #    doc.stag("img", src=(os.path.join(self.savepath, "params.png")))
 
         with tag("h2", klass="Header"):
             text("Model Confidence Assessment")
