@@ -732,23 +732,23 @@ class EO_Ensemble:
         if len(self.labels_dict[solver]) == 1:
             np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_series1_scatter.csv"),
                        np.transpose([self.SSE_ensemble_params[solver].flatten(),self.test_MSE[solver]]),
-                       delimiter=',')
+                       delimiter=',',header="Decay Rate, MSE",comments='')
             np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_series2_scatter.csv"),
                        np.transpose([np.array(self.CI_params[solver]).flatten(),
                         np.array(self.test_MSE[solver][
                             np.argwhere(self.test_MSE[solver] <= np.percentile(self.test_MSE[solver], 25))]).flatten()]),
-                       delimiter=',')
+                       delimiter=',',header="Upper 25 Decay Rate, MSE",comments='')
             np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_optseries_scatter.csv"),
-                       np.append(self.opt_params[solver], np.min(self.test_MSE[solver])),
-                       delimiter=',')
+                       np.append(self.opt_params[solver], np.min(self.test_MSE[solver])).reshape(1,2),
+                       delimiter=',',header="Optimum Solution Decay Rate, MSE",comments='')
 
             np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_minseries_scatter.csv"),
-                       np.append(self.min_params[solver][0],np.min(self.min_params[solver][1])),
-                       delimiter=',')
+                       np.append(self.min_params[solver][0],np.min(self.min_params[solver][1])).reshape(1,2),
+                       delimiter=',',header="Min Decay Solution Decay Rate, MSE",comments='')
 
             np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_maxseries_scatter.csv"),
-                       np.append(self.max_params[solver][0],np.min(self.max_params[solver][1])),
-                       delimiter=',')
+                       np.append(self.max_params[solver][0],np.min(self.max_params[solver][1])).reshape(1,2),
+                       delimiter=',',header="Max Decay Solution Decay Rate, MSE",comments='')
 
             param_df=pd.DataFrame({"Decay Rate (k)":[self.opt_params[solver][0],self.max_params[solver][0],self.min_params[solver][0]]},index=['Optimum Decay','Maximum Decay','Minimum Decay'])
             param_df.index.name='Scenario'
@@ -818,23 +818,23 @@ class EO_Ensemble:
             np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_series1_scatter.csv"),
                        np.transpose([self.SSE_ensemble_params[solver][:, 0],
                 self.SSE_ensemble_params[solver][:, 1]]),
-                       delimiter=',')
+                       delimiter=',',header="Decay Rate,Decay Order",comments='')
 
             np.savetxt(os.path.join(self.savepath, "params_fig_2_plot_series2_scatter.csv"),
                        np.transpose([self.CI_params[solver][0],
                     self.CI_params[solver][1]]),
-                       delimiter=',')
+                       delimiter=',',header="Upper 25 Decay Rate,Upper 25 Decay Order",comments='')
             np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_optseries_scatter.csv"),
-                       np.append(self.opt_params[solver][0], self.opt_params[solver][1]),
-                       delimiter=',')
+                       np.append(self.opt_params[solver][0], self.opt_params[solver][1]).reshape(1,2),
+                       delimiter=',',header="Optimum Decay Rate,Optimum Decay Order",comments='')
 
             np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_minseries_scatter.csv"),
-                       np.append(self.min_params[solver][0], self.min_params[solver][1]),
-                       delimiter=',')
+                       np.append(self.min_params[solver][0], self.min_params[solver][1]).reshape(1,2),
+                       delimiter=',',header="Minimum Decay Rate,Minimum Decay Order",comments='')
 
             np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_maxseries_scatter.csv"),
-                       np.append(self.max_params[solver][0], self.max_params[solver][1]),
-                       delimiter=',')
+                       np.append(self.max_params[solver][0], self.max_params[solver][1]).reshape(1,2),
+                       delimiter=',',header="Maximum Decay rate,Maximum Decay Order",comments='')
 
             param_df = pd.DataFrame({"Decay Rate (k)": [self.opt_params[solver][0], self.max_params[solver][0],
                                                         self.min_params[solver][0]],"Decay Order (n)":[self.opt_params[solver][1], self.max_params[solver][1],
@@ -904,24 +904,24 @@ class EO_Ensemble:
                        np.transpose([self.SSE_ensemble_params[solver][:, 0],
                                      self.SSE_ensemble_params[solver][:, 1],
                                     self.SSE_ensemble_params[solver][:, 2]]),
-                       delimiter=',')
+                       delimiter=',',header="Slow Fast Ratio,Slow Decay Rate,Fast Decay Rate",comments='')
 
             np.savetxt(os.path.join(self.savepath, "params_fig_2_plot_series2_scatter.csv"),
                        np.transpose([self.CI_params[solver][0],
                                      self.CI_params[solver][1],
                                      self.CI_params[solver][2]]),
-                       delimiter=',')
+                       delimiter=',',header="Upper 25 Slow Fast Ratio,Upper 25 Slow Decay Rate,Upper 25 Fast Decay Rate",comments='')
             np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_optseries_scatter.csv"),
-                       np.array([self.opt_params[solver][0], self.opt_params[solver][1],self.opt_params[solver][2]]),
-                       delimiter=',')
+                       np.array([self.opt_params[solver][0], self.opt_params[solver][1],self.opt_params[solver][2]]).reshape(1,3),
+                       delimiter=',',header="Optimum Slow Fast Ratio,Optimum Slow Decay Rate,Optimum Fast Decay Rate",comments='')
 
             np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_minseries_scatter.csv"),
-                       np.array([self.min_params[solver][0], self.min_params[solver][1],self.min_params[solver][2]]),
-                       delimiter=',')
+                       np.array([self.min_params[solver][0], self.min_params[solver][1],self.min_params[solver][2]]).reshape(1,3),
+                       delimiter=',',header="Minimum Slow Fast Ratio,Minimum Slow Decay Rate,Minimum Fast Decay Rate",comments='')
 
             np.savetxt(os.path.join(self.savepath, "params_fig_1_plot_maxseries_scatter.csv"),
-                       np.array([self.max_params[solver][0], self.max_params[solver][1],self.max_params[solver][2]]),
-                       delimiter=',')
+                       np.array([self.max_params[solver][0], self.max_params[solver][1],self.max_params[solver][2]]).reshape(1,3),
+                       delimiter=',',header="Maximum Slow Fast Ratio,Maximum Slow Decay Rate,Maximum Fast Decay Rate",comments='')
 
             param_df = pd.DataFrame({"Ratio of Slow to Fast Decay (w)": [self.opt_params[solver][0], self.max_params[solver][0],
                                                         self.min_params[solver][0]],
@@ -1258,16 +1258,16 @@ class EO_Ensemble:
     def target_fig(self, target):
         np.savetxt(os.path.join(self.savepath, "targets_fig_series1_line.csv"),
                    np.transpose([self.targets[self.model].index,self.targets[self.model][self.scenario]]),
-                   delimiter=',')
+                   delimiter=',',header="Tapstand FRC, Household FRC",comments='')
         hist_bars=np.histogram(np.append(self.X_cal["se4_lag"].values, self.t_test).flatten())
         widths=hist_bars[1][1]-hist_bars[1][0]
         xs=hist_bars[1][:-1]-widths/2
         np.savetxt(os.path.join(self.savepath, "targets_fig_series2_bar_width_"+str(widths)+".csv"),
                    np.transpose([xs,hist_bars[0]]),
-                   delimiter=',')
+                   delimiter=',',header="Tapstand FRC, Frequency Count",comments='')
         np.savetxt(os.path.join(self.savepath, "targets_fig_series3_vertline.csv"),
                    np.transpose([[self.inputtime,self.inputtime],[0,np.max(self.targets[self.model][self.scenario])]]),
-                   delimiter=',')
+                   delimiter=',',header="Tapstand FRC, Household FRC",comments='')
 
         str_io = io.StringIO()
         self.targets[self.model].index.name = 'Storage Duration'
@@ -1311,10 +1311,10 @@ class EO_Ensemble:
 
         np.savetxt(os.path.join(self.savepath, "decay_fig_series1_line.csv"),
                    np.transpose([times, pred]),
-                   delimiter=',')
+                   delimiter=',',header="Tapstand FRC, Household FRC",comments='')
         np.savetxt(os.path.join(self.savepath, "decay_fig_series2_horizline.csv"),
                    np.transpose([[np.max(times),np.min(times)],[0.2,0.2]]),
-                   delimiter=',')
+                   delimiter=',',header="Tapstand FRC, Household FRC",comments='')
 
         str_io2 = io.StringIO()
         df_decay=pd.DataFrame({"Predicted Household FRC":pred},index=times)
@@ -1437,23 +1437,23 @@ class EO_Ensemble:
             max_frc=2
         np.savetxt(os.path.join(self.savepath, "backcheck_fig_series1_scatter.csv"),
                    np.transpose([test_df["ts_frc"].values,test_df["hh_frc"].values]),
-                   delimiter=',')
+                   delimiter=',',header="Tapstand FRC, Household FRC",comments='')
         np.savetxt(os.path.join(self.savepath, "backcheck_fig_series2_scatter.csv"),
                    np.transpose([cal_df["ts_frc"].values, cal_df["hh_frc"].values]),
-                   delimiter=',')
+                   delimiter=',',header="Tapstand FRC, Household FRC",comments='')
 
         np.savetxt(os.path.join(self.savepath, "backcheck_fig_series3_vertline.csv"),
                    np.transpose([[0.2,0.2],[0,max_frc]]),
-                   delimiter=',')
+                   delimiter=',',header="Tapstand FRC, Household FRC",comments='')
         np.savetxt(os.path.join(self.savepath, "backcheck_fig_series4_vertline.csv"),
                    np.transpose([[0.5, 0.5], [0, max_frc]]),
-                   delimiter=',')
+                   delimiter=',',header="Tapstand FRC, Household FRC",comments='')
         np.savetxt(os.path.join(self.savepath, "backcheck_fig_series5_vertline.csv"),
                    np.transpose([[target, target], [0, max_frc]]),
-                   delimiter=',')
+                   delimiter=',',header="Tapstand FRC, Household FRC",comments='')
         np.savetxt(os.path.join(self.savepath, "backcheck_fig_series6_vertline.csv"),
                    np.transpose([[target+0.2, target+0.2], [0, max_frc]]),
-                   delimiter=',')
+                   delimiter=',',header="Tapstand FRC, Household FRC",comments='')
 
         '''backcheck_fig, ax = plt.subplots(figsize=(8, 5.5))
         ax.set_title(
