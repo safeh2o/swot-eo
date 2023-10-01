@@ -17,7 +17,7 @@ reqs = [
 
 setuptools.setup(
     name="swot-eo-safeh2o",
-    version="2.0.8",
+    version="2.0.9",
     author="SafeH2O",
     author_email="support@safeh2o.app",
     description="SWOT EO Project",
