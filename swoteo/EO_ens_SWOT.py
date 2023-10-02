@@ -1256,9 +1256,10 @@ class EO_Ensemble:
         return FRC_target
 
     def target_fig(self, target):
+        csv_header = "Tapstand FRC,Household FRC"
         np.savetxt(os.path.join(self.savepath, "targets_fig_series1_line.csv"),
                    np.transpose([self.targets[self.model].index,self.targets[self.model][self.scenario]]),
-                   delimiter=',',header="Tapstand FRC, Household FRC",comments='')
+                   delimiter=',',header=csv_header,comments='')
         hist_bars=np.histogram(np.append(self.X_cal["se4_lag"].values, self.t_test).flatten())
         widths=hist_bars[1][1]-hist_bars[1][0]
         xs=hist_bars[1][:-1]-widths/2
@@ -1267,7 +1268,7 @@ class EO_Ensemble:
                    delimiter=',',header="Tapstand FRC, Frequency Count",comments='')
         np.savetxt(os.path.join(self.savepath, "targets_fig_series3_vertline.csv"),
                    np.transpose([[self.inputtime,self.inputtime],[0,np.max(self.targets[self.model][self.scenario])]]),
-                   delimiter=',',header="Tapstand FRC, Household FRC",comments='')
+                   delimiter=',',header=csv_header,comments='')
 
         str_io = io.StringIO()
         self.targets[self.model].index.name = 'Storage Duration'
@@ -1311,10 +1312,10 @@ class EO_Ensemble:
 
         np.savetxt(os.path.join(self.savepath, "decay_fig_series1_line.csv"),
                    np.transpose([times, pred]),
-                   delimiter=',',header="Tapstand FRC, Household FRC",comments='')
+                   delimiter=',',header=csv_header,comments='')
         np.savetxt(os.path.join(self.savepath, "decay_fig_series2_horizline.csv"),
                    np.transpose([[np.max(times),np.min(times)],[0.2,0.2]]),
-                   delimiter=',',header="Tapstand FRC, Household FRC",comments='')
+                   delimiter=',',header=csv_header,comments='')
 
         str_io2 = io.StringIO()
         df_decay=pd.DataFrame({"Predicted Household FRC":pred},index=times)
@@ -1344,6 +1345,7 @@ class EO_Ensemble:
         return
 
     def back_check_fig(self, target):
+        csv_header = "Tapstand FRC,Household FRC"
         time_lb = self.inputtime - 3
         time_ub = self.inputtime + 3
         test_df = pd.DataFrame(
@@ -1437,23 +1439,23 @@ class EO_Ensemble:
             max_frc=2
         np.savetxt(os.path.join(self.savepath, "backcheck_fig_series1_scatter.csv"),
                    np.transpose([test_df["ts_frc"].values,test_df["hh_frc"].values]),
-                   delimiter=',',header="Tapstand FRC, Household FRC",comments='')
+                   delimiter=',',header=csv_header,comments='')
         np.savetxt(os.path.join(self.savepath, "backcheck_fig_series2_scatter.csv"),
                    np.transpose([cal_df["ts_frc"].values, cal_df["hh_frc"].values]),
-                   delimiter=',',header="Tapstand FRC, Household FRC",comments='')
+                   delimiter=',',header=csv_header,comments='')
 
         np.savetxt(os.path.join(self.savepath, "backcheck_fig_series3_vertline.csv"),
                    np.transpose([[0.2,0.2],[0,max_frc]]),
-                   delimiter=',',header="Tapstand FRC, Household FRC",comments='')
+                   delimiter=',',header=csv_header,comments='')
         np.savetxt(os.path.join(self.savepath, "backcheck_fig_series4_vertline.csv"),
                    np.transpose([[0.5, 0.5], [0, max_frc]]),
-                   delimiter=',',header="Tapstand FRC, Household FRC",comments='')
+                   delimiter=',',header=csv_header,comments='')
         np.savetxt(os.path.join(self.savepath, "backcheck_fig_series5_vertline.csv"),
                    np.transpose([[target, target], [0, max_frc]]),
-                   delimiter=',',header="Tapstand FRC, Household FRC",comments='')
+                   delimiter=',',header=csv_header,comments='')
         np.savetxt(os.path.join(self.savepath, "backcheck_fig_series6_vertline.csv"),
                    np.transpose([[target+0.2, target+0.2], [0, max_frc]]),
-                   delimiter=',',header="Tapstand FRC, Household FRC",comments='')
+                   delimiter=',',header=csv_header,comments='')
 
         '''backcheck_fig, ax = plt.subplots(figsize=(8, 5.5))
         ax.set_title(
