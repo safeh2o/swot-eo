@@ -4,9 +4,9 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 reqs = [
-    "numpy==1.22.0",
+    "numpy==1.22.3",
     "matplotlib==3.5.2",
-    "pandas==1.4.2",
+    "pandas==1.4.3",
     "scikit-learn==1.0.2",
     "scipy==1.8.0",
     "xlrd==1.2.0",
@@ -17,7 +17,7 @@ reqs = [
 
 setuptools.setup(
     name="swot-eo-safeh2o",
-    version="2.0.7",
+    version="3.0.0",
     author="SafeH2O",
     author_email="support@safeh2o.app",
     description="SWOT EO Project",
@@ -33,6 +33,6 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     packages=["swoteo"],
-    python_requires=">=3.6",
+    python_requires=">=3.10",
     install_requires=reqs,
 )
