@@ -316,6 +316,8 @@ class EO_Ensemble:
 
     def fo_targets(self):
         times = np.arange(3, 25, 3)
+        if self.inputtime not in times:
+            times=np.append(times, self.inputtime)
         CI_idx = np.argwhere(
             self.test_MSE["First Order"]
             <= np.percentile(self.test_MSE["First Order"], 25)
@@ -359,6 +361,8 @@ class EO_Ensemble:
 
     def power_targets(self):
         times = np.arange(3, 25, 3)
+        if self.inputtime not in times:
+            times=np.append(times, self.inputtime)
         CI_idx = np.argwhere(
             self.test_MSE["Power Decay"]
             <= np.percentile(self.test_MSE["Power Decay"], 25)
@@ -423,6 +427,8 @@ class EO_Ensemble:
 
     def pfo_targets(self):
         times = np.arange(3, 25, 3)
+        if self.inputtime not in times:
+            times=np.append(times, self.inputtime)
         CI_idx = np.argwhere(
             self.test_MSE["Parallel First Order"]
             <= np.percentile(self.test_MSE["Parallel First Order"], 25)
@@ -1157,7 +1163,10 @@ class EO_Ensemble:
             ] = "Variance or distribution of household and tapstand FRC are significantly different stable at a p-value level of 0.05"
 
         # 3 - Check histogram densities
-        bin_centre = np.arange(3, 30, 3)
+        if self.inputtime<=24:
+            bin_centre = np.arange(3, 30, 3)
+        else:
+            bin_centre = np.arange(3, self.inputtime+12, 3)
         bins = bin_centre - 1.5
         hist = np.histogram(
             np.append(self.X_cal["se4_lag"].values, self.t_test).flatten(),
@@ -1304,7 +1313,10 @@ class EO_Ensemble:
         self.target_base_64_pngData = base64.b64encode(StringIOBytes_target.read())
         plt.close(target_fig)'''
 
-        times = np.arange(self.inputtime, 37, 3)
+        if self.inputtime<=36:
+            times = np.arange(self.inputtime, 37, 3)
+        else:
+            times = np.arange(self.inputtime, self.inputtime+12, 3)
         params = self.opt_params[self.model]
         pred = self.f_dict[self.model](
             params, np.array([target for i in range(len(times))]), times
