@@ -12,6 +12,7 @@ from sklearn.metrics import r2_score
 from sklearn.model_selection import KFold, train_test_split
 from xlrd.xldate import xldate_as_datetime
 from yattag import Doc
+
 np.random.seed(0)
 from . import EO_functions
 
@@ -125,7 +126,7 @@ class EO_Ensemble:
             "Stability": None,
             "Histogram": None,
             "Uniformity": None,
-            "High Decay": None,
+            "Decay Rate": None,
             "Model Fit": None,
         }
 
@@ -134,7 +135,7 @@ class EO_Ensemble:
             "Stability": None,
             "Histogram": None,
             "Uniformity": None,
-            "High Decay": None,
+            "Decay Rate": None,
             "Model Fit": None,
         }
 
@@ -1091,14 +1092,14 @@ class EO_Ensemble:
         self.confidence = {
             'Histogram': None,
             'Observations': None,
-            'High Decay': None,
+            'Decay Rate': None,
             'NSE': None
         }
 
         self.confidence_reason = {
             'Histogram': None,
             'Observations': None,
-            'High Decay': None,
+            'Decay Rate': None,
             'NSE': None
         }
         """
@@ -1223,12 +1224,12 @@ class EO_Ensemble:
         # 5 - Check Target at 24 hours
         target_24 = self.targets[self.model][self.scenario].loc[24]
         if target_24 < 2:
-            self.confidence["High Decay"] = "High"
-            self.confidence_reason["High Decay"] = "FRC decay parameters are reasonable"
+            self.confidence["Decay Rate"] = "High"
+            self.confidence_reason["Decay Rate"] = "FRC decay parameters are reasonable"
         else:
-            self.confidence["High Decay"] = "Low"
+            self.confidence["Decay Rate"] = "Low"
             self.confidence_reason[
-                "High Decay"
+                "Decay Rate"
             ] = "FRC decay parameters are higher than normal. This may lead to higher FRC than acceptable FRC targets at long storage durations. This can occur normally in some sites or it may be due to a large number of short-duration samples. If the average storage duration is shorter than 6 hours, please collect additional samples at longer storage durations to see if this warning message changes"
 
         # 6 - Check R2/NSE
